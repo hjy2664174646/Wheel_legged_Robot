@@ -1,0 +1,102 @@
+那就对路了，RK3576 + Ubuntu 22.04 + ROS 2 Humble 这套是能跑你这个工程的。
+
+你现在要做的，基本就是把这个工程缺的依赖补齐。按你这个仓库来看，直接装下面这些就行。
+
+先更新源：
+
+sudo apt update
+安装 ROS 相关包：
+
+sudo apt install -y \
+  ros-humble-navigation2 \
+  ros-humble-nav2-bringup \
+  ros-humble-slam-toolbox \
+  ros-humble-rviz2 \
+  ros-humble-robot-state-publisher \
+  ros-humble-joint-state-publisher \
+  ros-humble-joint-state-publisher-gui \
+  ros-humble-tf-transformations \
+  ros-humble-pcl-conversions \
+  ros-humble-diagnostic-updater \
+  ros-humble-xacro
+安装 Python 和系统依赖：
+
+sudo apt install -y \
+  python3-colcon-common-extensions \
+  python3-rosdep \
+  python3-serial \
+  libpcap-dev \
+  libpcl-dev
+如果 rosdep 还没初始化，再执行：
+
+sudo rosdep init
+rosdep update
+然后给串口权限：
+
+sudo usermod -a -G dialout $USER
+执行完以后，注销重新登录 一次。
+
+接着到你的工作空间里安装源码依赖并编译：
+
+source /opt/ros/humble/setup.bash
+cd ~/fishbot_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build
+source install/setup.bash
+如果你的工作空间不是 ~/fishbot_ws，就换成你自己的目录。
+
+再提醒你两个小点：
+
+你这个工程默认启动的是 lslidar_driver，也就是雷神雷达，不是 YDLidar。要确认你的雷达型号对不对。
+serial_bridge_node 默认串口是 /dev/serial_ttl，如果你机器上实际不是这个名字，后面 launch 时要改。
+你可以先把上面这些装完。装完后如果愿意，我可以继续直接给你一份：
+
+
+
+
+
+
+
+
+
+
+
+一、创建 udev 规则文件
+bash
+运行
+sudo nano /etc/udev/rules.d/99-custom-serial.rules
+把下面内容全部粘贴进去（已经用你提供的 idVendor/idProduct 写好了）：
+bash
+运行
+# ttyACM0 → /dev/serial_ttl
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2e88", ATTRS{idProduct}=="4603", MODE="0666", SYMLINK+="serial_ttl"
+
+# ttyUSB0 → /dev/lidar
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="0666", SYMLINK+="lidar"
+保存退出（Ctrl+O 回车，Ctrl+X）。
+二、加载并生效规则
+bash
+运行
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+三、验证是否成功
+拔掉再插一次两个设备，执行：
+bash
+运行
+ls -l /dev/serial_ttl
+ls -l /dev/lidar
+如果输出类似这样，就成功了：
+plaintext
+lrwxrwxrwx 1 root root 7 May 20 10:00 /dev/serial_ttl -> ttyACM0
+lrwxrwxrwx 1 root root 7 May 20 10:00 /dev/lidar -> ttyUSB0
+四、后续使用方式
+以后你的程序里，直接写固定设备名即可，再也不用管系统分配的编号了：
+cpp
+运行
+// 原来的写法（可能变）
+// "/dev/ttyACM0"
+// "/dev/ttyUSB0"
+
+// 现在的写法（永久固定）
+"/dev/serial_ttl"
+"/dev/lidar"

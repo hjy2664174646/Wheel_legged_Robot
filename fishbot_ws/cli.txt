@@ -1,0 +1,10 @@
+激活ros环境
+source /opt/ros/humble/setup.bash
+
+终端1
+ros2 launch fishbot_bringup bringup.launch.py
+终端2(导航）
+ros2 launch fishbot_navigation2 navigation2.launch.py \ map:=/home/cat/fishbot_ws/src/fishbot_navigation2/maps/room_new.yaml \ use_sim_time:=false \ params_file:=/home/cat/fishbot_ws/src/fishbot_navigation2/config/nav2_params.yaml 
+终端2（建图）
+ros2 launch fishbot_navigation2 slam_toolbox.launch.py use_sim_time:=False
+

@@ -1,0 +1,44 @@
+# ROS 2 build artifacts
+fishbot_ws/build/
+fishbot_ws/install/
+fishbot_ws/log/
+**/build/
+**/install/
+**/log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# C/C++ build outputs
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.axf
+
+# Keil / embedded temporary files
+*.uvguix.*
+*.scvd
+*.dbgconf
+JLinkLog.txt
+JLinkSettings.ini
+Listings/
+Objects/
+DebugConfig/
+wheel_legged_ros/MDK-ARM/CtrlBoard-H7_IMU/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+export.log
