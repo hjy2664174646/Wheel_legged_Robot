@@ -42,3 +42,11 @@ Thumbs.db
 # Logs
 *.log
 export.log
+
+# SolidWorks temporary and backup files
+~$*.SLDPRT
+~$*.SLDASM
+~$*.SLDDRW
+*.swo
+*.swp
+*.bak
