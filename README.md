@@ -25,7 +25,7 @@ Wheel_legged_Robot/
 ├── solidworks/              # 机械结构、加工图纸和三维模型
 │   ├── hhu外壳改版sw/       # 外壳改版零件及 STL/3MF 导出文件
 │   ├── 机加工图纸及模型/    # DXF 图纸、STEP 模型和加工 BOM
-│   └── 机械结构.zip         # 机械结构资料压缩包└── install.txt              # 依赖安装和设备规则记录
+│   └── 机械结构.zip         # 机械结构资料压缩包`r`n└── install.txt              # 依赖安装和设备规则记录
 ```
 
 ## 功能
